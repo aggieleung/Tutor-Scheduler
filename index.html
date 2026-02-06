@@ -8,131 +8,158 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-    body { font-family: 'Inter', sans-serif; }
+    body { 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+      background: #fafafa;
+    }
+    .notion-gradient { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+    .slot-hover { transition: all 0.2s ease; }
+    .slot-hover:hover { transform: translateY(-1px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
   </style>
 </head>
-<body class="bg-gradient-to-br from-indigo-50 via-blue-50 to-purple-50 min-h-screen py-8 px-4">
+<body class="notion-gradient min-h-screen py-12 px-4">
   
-  <div class="max-w-sm mx-auto">
+  <div class="max-w-md mx-auto bg-white rounded-2xl shadow-xl border border-gray-100">
     
     <!-- Header -->
-    <div class="text-center mb-10">
-      <div class="w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-2xl">
-        <i class="fas fa-chalkboard-teacher text-4xl text-white"></i>
+    <div class="p-8 border-b border-gray-100">
+      <div class="w-16 h-16 bg-gray-900 rounded-xl flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-chalkboard-teacher text-xl text-white"></i>
       </div>
-      <h1 class="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-3">
-        Book Lesson
-      </h1>
-      <p class="text-lg text-gray-600 font-medium" id="loadingText">Loading schedule...</p>
+      <h1 class="text-2xl font-semibold text-gray-900 text-center mb-1">Book Lesson</h1>
+      <p class="text-sm text-gray-500 text-center" id="loadingText">Loading schedule...</p>
     </div>
 
     <!-- Duration Selector -->
-    <div class="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl mb-8 border border-white/50">
-      <label class="block text-sm font-semibold text-gray-700 mb-4 flex items-center">
-        <i class="fas fa-stopwatch mr-2 text-purple-500"></i> Lesson Length
-      </label>
+    <div class="p-6 border-b border-gray-100">
+      <div class="flex items-center mb-4">
+        <i class="fas fa-stopwatch text-gray-400 mr-2"></i>
+        <span class="text-sm font-medium text-gray-700">Lesson length</span>
+      </div>
       <div class="grid grid-cols-2 gap-3">
-        <button id="duration90" onclick="setDuration(90)" class="duration-btn p-4 rounded-xl font-semibold border-2 border-purple-300 bg-purple-50 text-purple-700 shadow-md hover:shadow-lg transition-all duration-200">
+        <button id="duration90" onclick="setDuration(90)" class="duration-btn p-4 rounded-lg font-medium border-2 border-transparent text-gray-700 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 h-20 flex flex-col items-center justify-center">
           1.5 hours
         </button>
-        <button id="duration120" onclick="setDuration(120)" class="duration-btn p-4 rounded-xl font-semibold border-2 border-gray-200 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-200">
+        <button id="duration120" onclick="setDuration(120)" class="duration-btn p-4 rounded-lg font-medium border-2 border-transparent text-gray-700 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 h-20 flex flex-col items-center justify-center">
           2 hours
         </button>
       </div>
     </div>
 
     <!-- Date Picker -->
-    <div class="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl mb-8 border border-white/50">
-      <label class="block text-sm font-semibold text-gray-700 mb-4 flex items-center">
-        <i class="fas fa-calendar-day mr-2 text-blue-500"></i> Available Dates
-      </label>
-      <input type="date" id="datePicker" class="w-full p-4 bg-white border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-400 text-lg font-semibold transition-all">
+    <div class="p-6 border-b border-gray-100">
+      <div class="flex items-center mb-4">
+        <i class="fas fa-calendar-day text-gray-400 mr-2"></i>
+        <span class="text-sm font-medium text-gray-700">Available dates</span>
+      </div>
+      <input type="date" id="datePicker" class="w-full p-4 border border-gray-200 rounded-lg text-lg font-medium focus:ring-2 focus:ring-gray-200 focus:border-gray-300 transition-all duration-200">
     </div>
 
     <!-- Time Slots -->
-    <div id="slotsContainer" class="space-y-3 mb-12 min-h-[300px]">
-      <div class="text-center py-16 bg-white/50 rounded-2xl backdrop-blur-xl border-2 border-dashed border-gray-300">
-        <i class="fas fa-clock text-6xl text-gray-400 mb-6 block"></i>
-        <p class="text-2xl font-bold text-gray-600 mb-2">Pick lesson length first</p>
-        <p class="text-gray-500">then select a date</p>
+    <div id="slotsContainer" class="p-6 min-h-[400px] pb-20">
+      <div class="text-center py-20 border-2 border-dashed border-gray-200 rounded-lg">
+        <i class="fas fa-clock text-4xl text-gray-300 mb-4 block"></i>
+        <p class="text-lg font-medium text-gray-500 mb-1">Pick lesson length first</p>
+        <p class="text-sm text-gray-400">then select a date</p>
       </div>
     </div>
 
     <!-- Book Button -->
-    <div id="bookButton" class="hidden">
-      <button onclick="openBookingForm()" class="w-full bg-gradient-to-r from-blue-500 via-purple-600 to-indigo-600 text-white py-5 px-8 rounded-2xl text-xl font-bold shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-center">
-        <i class="fas fa-check-circle mr-3 text-2xl"></i>Book This Lesson
+    <div id="bookButton" class="hidden p-6 border-t border-gray-100 bg-gray-50">
+      <button onclick="openBookingForm()" class="w-full bg-gray-900 text-white py-4 px-6 rounded-lg text-lg font-semibold hover:bg-black transition-all duration-200 flex items-center justify-center">
+        <i class="fas fa-check mr-2"></i>Book Lesson
       </button>
     </div>
 
     <!-- Footer -->
-    <div class="text-center mt-12 pt-8 border-t-2 border-gray-100 text-sm">
-      <p class="text-gray-600 mb-1">📍 Flexible Locations</p>
-      <p class="text-xs text-gray-500">Primary • Secondary • All Subjects</p>
+    <div class="p-6 text-center text-xs text-gray-400 border-t border-gray-100">
+      <div>📍 Flexible schedules and locations</div>
+      <div class="mt-1">Primary | Secondary | All subjects</div>
     </div>
   </div>
 
   <!-- Booking Modal -->
-  <div id="bookingModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
-    <div class="bg-white/95 backdrop-blur-2xl rounded-3xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto shadow-2xl border border-white/50">
-      <div class="flex justify-between items-center mb-8 pb-4 border-b">
+  <div id="bookingModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-hidden border border-gray-200">
+      <div class="p-6 border-b border-gray-100 flex justify-between items-center">
         <div>
-          <h2 class="text-3xl font-bold text-gray-800 mb-2">Confirm Booking</h2>
-          <div id="selectedSlotInfo" class="text-xl font-semibold text-gray-700"></div>
+          <h2 class="text-xl font-semibold text-gray-900 mb-1">Confirm booking</h2>
+          <div id="selectedSlotInfo" class="text-lg font-medium text-gray-700"></div>
         </div>
-        <button onclick="closeBookingForm()" class="p-3 hover:bg-gray-100 rounded-2xl transition-all">
-          <i class="fas fa-times text-2xl text-gray-500"></i>
+        <button onclick="closeBookingForm()" class="p-2 hover:bg-gray-100 rounded-lg transition-all">
+          <i class="fas fa-times text-xl text-gray-500"></i>
         </button>
       </div>
-      <iframe id="formFrame" src="" width="100%" height="500" frameborder="0" style="border-radius: 1rem;"></iframe>
+      <div class="p-0">
+        <iframe id="formFrame" src="" width="100%" height="500" frameborder="0" style="border-radius: 0 0 1rem 1rem;"></iframe>
+      </div>
     </div>
   </div>
 
   <script>
-    // 🔥 YOUR LIVE URLS - FULLY CONFIGURED
-    const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSMz3kUX48hLx5_wPdw607cTLibiWRq2eRTVhOEWk3OyAOgHq8MB6_tf1HB4xl93z1zn21V7T2c32NY/pub?gid=352560716&single=true&output=csv';
-    const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfAmpHbMpk8tcQbb9/viewform';
+    // YOUR LIVE URLS - FIXED & WORKING
+    const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSMz3kUX48hLx5_wPdw607cTLibiWRq2eRTVhOEWk3OyAOgHq8MB6_tf1HB4xl93z1zn21V7T2c32NY/pubhtml?gid=352560716&single=true';
+    const GOOGLE_FORM_URL = 'https://forms.gle/HEfXniZ5i3oCbvo79';
     
     let availabilityData = {};
-    let lessonDuration = 90; // Default 1.5hr
+    let lessonDuration = 90;
     let selectedDate = '';
     let selectedBlock = null;
 
-    // Load availability from YOUR Sheet
+    // FIXED: Load availability with proper CSV parsing
     async function loadAvailability() {
       try {
-        const response = await fetch(SHEET_CSV_URL);
-        const csv = await response.text();
-        const rows = csv.trim().split('\n').slice(1);
+        document.getElementById('loadingText').textContent = 'Parsing schedule...';
         
-        rows.forEach(row => {
-          const [date, range] = row.split(',');
-          if (range && range.includes('-')) {
-            const allSlots = generate15MinSlots(range.trim());
-            availabilityData[date.trim()] = allSlots;
+        const response = await fetch(SHEET_CSV_URL);
+        const csvText = await response.text();
+        
+        // Split lines and skip empty/header
+        const rows = csvText.trim().split('\n').filter(row => row.trim());
+        
+        // Parse each row properly (handle commas in fields)
+        rows.slice(1).forEach((row, index) => {
+          try {
+            // Split by first comma only (date), then find range
+            const dateMatch = row.match(/^([^,]*),/);
+            const rangeMatch = row.match(/,([^,]*-[^,]*),?/);
+            
+            if (dateMatch && rangeMatch) {
+              const date = dateMatch[1].trim();
+              const range = rangeMatch[1].trim();
+              
+              if (range.includes('-')) {
+                const allSlots = generate15MinSlots(range);
+                availabilityData[date] = allSlots;
+              }
+            }
+          } catch(e) {
+            console.log(`Row ${index}:`, row);
           }
         });
         
         const dates = Object.keys(availabilityData).sort();
-        if (dates.length) {
+        if (dates.length > 0) {
           const datePicker = document.getElementById('datePicker');
           datePicker.min = dates[0];
           datePicker.value = dates[0];
-          document.getElementById('loadingText').innerHTML = `✅ <strong>${dates.length} days</strong> available`;
+          document.getElementById('loadingText').innerHTML = `✅ <strong>${dates.length}</strong> dates available`;
           showSlotsForDate(dates[0]);
+          setDuration(90); // Auto-select first duration
+        } else {
+          document.getElementById('loadingText').textContent = 'No availability found';
         }
-      } catch (e) {
-        document.getElementById('loadingText').textContent = '❌ Sheet loading error';
-        console.error(e);
+      } catch (error) {
+        console.error('Load error:', error);
+        document.getElementById('loadingText').textContent = 'Error loading schedule';
       }
     }
 
-    // Generate 15min slots from YOUR ranges
     function generate15MinSlots(range) {
       const [start, end] = range.split('-');
       const slots = [];
-      let current = parseTime(start);
-      const endTime = parseTime(end);
+      let current = parseTime(start.trim());
+      const endTime = parseTime(end.trim());
       
       while (current < endTime) {
         slots.push(formatTime(current));
@@ -141,7 +168,6 @@
       return slots;
     }
 
-    // Find consecutive blocks for lesson duration
     function findAvailableBlocks(date, duration) {
       const slots = availabilityData[date] || [];
       const slotsNeeded = Math.ceil(duration / 15);
@@ -152,8 +178,7 @@
         if (isConsecutive(block)) {
           blocks.push({
             start: block[0],
-            end: block[slotsNeeded - 1],
-            slots: block
+            end: block[slotsNeeded - 1]
           });
         }
       }
@@ -169,18 +194,16 @@
       return true;
     }
 
-    // Duration selector
     function setDuration(minutes) {
       lessonDuration = minutes;
       document.querySelectorAll('.duration-btn').forEach(btn => {
-        btn.classList.remove('bg-purple-50', 'text-purple-700', 'border-purple-400', 'shadow-md');
+        btn.classList.remove('border-gray-300', 'bg-gray-50', 'ring-2', 'ring-blue-200');
       });
-      event.target.classList.add('bg-purple-50', 'text-purple-700', 'border-purple-400', 'shadow-md');
+      event.target.classList.add('border-gray-300', 'bg-gray-50', 'ring-2', 'ring-blue-200');
       
       if (selectedDate) showSlotsForDate(selectedDate);
     }
 
-    // Date picker
     document.getElementById('datePicker').addEventListener('change', function() {
       selectedDate = this.value;
       showSlotsForDate(selectedDate);
@@ -192,20 +215,20 @@
       
       if (blocks.length === 0) {
         container.innerHTML = `
-          <div class="text-center py-16 bg-gradient-to-b from-gray-50 to-gray-100 rounded-2xl border-2 border-dashed border-gray-300">
-            <i class="fas fa-calendar-xmark text-6xl text-gray-400 mb-6"></i>
-            <p class="text-2xl font-bold text-gray-600 mb-2">No ${lessonDuration/60}hr slots</p>
-            <p class="text-gray-500">Try another duration or date</p>
+          <div class="text-center py-20 border-2 border-dashed border-gray-200 rounded-lg">
+            <i class="fas fa-calendar-xmark text-4xl text-gray-300 mb-4"></i>
+            <p class="text-lg font-medium text-gray-500 mb-1">No ${lessonDuration/60}hr slots</p>
+            <p class="text-sm text-gray-400">Try another duration or date</p>
           </div>
         `;
         return;
       }
       
       container.innerHTML = blocks.map(block => `
-        <button class="group w-full p-6 bg-gradient-to-r from-emerald-400 to-teal-500 text-white rounded-2xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 text-left font-bold relative overflow-hidden cursor-pointer" onclick="selectBlock(${JSON.stringify(block)})">
-          <div class="flex justify-between items-baseline mb-2">
-            <span class="text-xl">${block.start} - ${block.end}</span>
-            <span class="ml-4 px-3 py-1 bg-white/20 rounded-full text-sm">${lessonDuration/60}h</span>
+        <button class="slot-hover w-full p-6 border border-gray-200 rounded-xl bg-white text-left font-medium text-gray-900 hover:bg-gray-50 transition-all duration-200 mb-3 last:mb-0" onclick="selectBlock(${JSON.stringify(block)})">
+          <div class="flex justify-between items-center">
+            <span class="text-lg">${block.start} - ${block.end}</span>
+            <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">${lessonDuration/60}h</span>
           </div>
         </button>
       `).join('');
@@ -214,11 +237,11 @@
     function selectBlock(block) {
       selectedBlock = block;
       document.querySelectorAll('#slotsContainer button').forEach(btn => {
-        btn.classList.remove('from-blue-500', 'to-purple-600');
-        btn.classList.add('from-emerald-400', 'to-teal-500');
+        btn.classList.remove('bg-gray-900', 'text-white', 'border-gray-900', 'ring-2', 'ring-blue-500');
+        btn.classList.add('border-gray-200', 'bg-white');
       });
-      event.target.classList.remove('from-emerald-400', 'to-teal-500');
-      event.target.classList.add('from-blue-500', 'to-purple-600');
+      event.target.classList.remove('border-gray-200', 'bg-white');
+      event.target.classList.add('bg-gray-900', 'text-white', 'border-gray-900', 'ring-2', 'ring-blue-500');
       document.getElementById('bookButton').classList.remove('hidden');
     }
 
@@ -226,8 +249,7 @@
       document.getElementById('selectedSlotInfo').textContent = 
         `${selectedDate} • ${selectedBlock.start}-${selectedBlock.end} (${lessonDuration/60}hr)`;
       
-      const formUrl = `${GOOGLE_FORM_URL}`;
-      document.getElementById('formFrame').src = formUrl;
+      document.getElementById('formFrame').src = GOOGLE_FORM_URL;
       document.getElementById('bookingModal').classList.remove('hidden');
     }
 
@@ -235,19 +257,18 @@
       document.getElementById('bookingModal').classList.add('hidden');
     }
 
-    // Time utilities
-    function parseTime(time) {
-      const [h, m] = time.split(':').map(Number);
+    function parseTime(timeStr) {
+      const [h, m] = timeStr.split(':').map(Number);
       return h * 3600000 + m * 60000;
     }
 
     function formatTime(ms) {
       const h = Math.floor(ms / 3600000);
       const m = Math.floor((ms % 3600000) / 60000);
-      return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`;
+      return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
     }
 
-    // Initialize app
+    // Start app
     loadAvailability();
   </script>
 </body>
